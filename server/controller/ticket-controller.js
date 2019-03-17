@@ -12,7 +12,19 @@ routes.get("/list", (req,res) =>{
     let limit = parseInt(req.query.limit);
     let sortBy = req.query.sortBy;
     let sortOrder = req.query.sortOrder;
-    ticketService.getAll(page, limit, sortBy, sortOrder, function(tickets){
+    let search = {};
+    let sort = {};
+    if(req.query.search){
+        let searchData = req.query.search.split(":");
+        search.field = searchData[0];
+        search.value = searchData[1];
+    }
+    if(req.query.sort){
+        let sortData = req.query.sort.split(":");
+        sort.sortBy = sortData[0];
+        sort.sortOrder = sortData[1];
+    }
+    ticketService.getAll(page, limit, search, sort, function(tickets){
         res.status(200);
         res.send({"Status":"Success", "data":tickets});
     })

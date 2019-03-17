@@ -3,22 +3,27 @@ let ticket = require('../model/ticket.js');
 
 let ticketRepository = {
 
-  findAll: function(page, limit, sortBy, sortOrder, callback){
+  findAll: function(page, limit, search, sortData, callback){
 
+      let query = {};
       var options = {};
       options.page = page;
       options.limit = limit;
-      if(sortBy){
+
+      if(sortData.sortBy){
           let sort = {};
-          sort[sortBy] = sortOrder;
+          let sortOrder = (sortData.sortOrder == "asc"?1:-1);
+          sort[sortData.sortBy] = sortOrder;
           options.sort = sort;
       }
-      ticket.paginate({}, options)
+      if(search.field){
+        query[search.field] = search.value;
+      }
+      ticket.paginate(query, options)
         .then(response => {
             callback(response)
         })
         .catch(function(err){
-          console.log("Error occured");
           console.log(err);
         });
   }

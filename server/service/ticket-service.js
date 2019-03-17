@@ -3,9 +3,9 @@ let ticketRepository = require('../repository/ticket-repository.js');
 
 let ticketService = {
 
-      getAll: function(page, limit, sortBy, sortOrder, callback){
-          sortOrder = (sortOrder == "asc"?1:-1);
-          ticketRepository.findAll(page, limit, sortBy, sortOrder, function(tickets){
+      getAll: function(page, limit, search, sort, callback){
+
+          ticketRepository.findAll(page, limit, search, sort, function(tickets){
             callback(tickets);
           });
       }
