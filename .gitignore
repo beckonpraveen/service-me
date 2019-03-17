@@ -1,0 +1,6 @@
+# Created by .ignore support plugin (hsz.mobi)
+
+.env
+.editorconfig
+.nuxt
+node_modules/
