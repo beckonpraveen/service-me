@@ -14,7 +14,7 @@
             </b-nav-form>
           </b-col>
           <b-col sm="12" lg="6" class="mt-4">
-            <b-card class="p-2 mb-2">
+            <b-card class="p-2 mb-2 text-card">
               <h4 class="text-left">Number of Open Tickets</h4>
               <TextChart  :forYear="selectedYear" :key="openChartState" :options="{ chartName:'totalOpen', color:'#cc3300', maintainAspectRatio: false, height: 200, width:400 }" />
             </b-card>
@@ -59,9 +59,19 @@
     background-color:rgb(79, 145, 205);
     color:white
   }
-  .card{
+  .card.text-card{
     min-height: 500px;
     max-height: 500px
+  }
+
+  @media only screen and (max-width: 600px){
+    .card.text-card{
+      min-height: 400px;
+      max-height: 400px
+    }
+    .text-card .count-text{
+      font-size: 30px;
+    }
   }
 </style>
 <script>
