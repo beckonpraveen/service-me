@@ -67,7 +67,7 @@
           totalRows:0,
           items:[],
           modalData: [],
-          fields:['ticketId','createdDate','daysOpen','owner','requestor','requestorSeniority','type','category','priority','severity','satisfaction'],
+          fields:['ticketId','createdDate','owner','requestor','type','category','priority','severity','daysOpen'],
           selected:"all",
           sortSelected:"createdDate",
           sortOrderSelected:"-1",
