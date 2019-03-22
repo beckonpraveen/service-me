@@ -12,8 +12,7 @@ let ticketRepository = {
 
       if(sortData.sortBy){
           let sort = {};
-          let sortOrder = (sortData.sortOrder == "asc"?1:-1);
-          sort[sortData.sortBy] = sortOrder;
+          sort[sortData.sortBy] = sortData.sortOrder;
           options.sort = sort;
       }
       if(search.field){
@@ -26,6 +25,23 @@ let ticketRepository = {
         .catch(function(err){
           console.log(err);
         });
+  },
+  fetchSummaryData: function(groupBy, callback){
+
+      let aggregateField = "$"+groupBy;
+      ticket.aggregate([{"$group":{_id:aggregateField,count:{$sum:1}}}], function(err, summary){
+          console.log("Fetched summary is::"+JSON.stringify(summary));
+          callback(summary);
+      });
+  },
+  fetchDistinctYears: function(callback){
+
+      ticket.distinct("year", function(err, years){
+          console.log("Years data is::"+JSON.stringify(years));
+          years.sort(function(a,b){return b-a});
+          let top5years = years.slice(0,5);
+          callback(top5years);
+      });
   }
 }
 module.exports = ticketRepository;

@@ -13,15 +13,12 @@
 
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <b-nav-form>
-          <b-form-input size="sm" class="mr-sm-2" type="text" placeholder="Search" />
-          <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
-        </b-nav-form>
 
+        <!--Search/-->
         <b-nav-item-dropdown right>
           <!-- Using button-content slot -->
           <template slot="button-content"><em>{{userName}}</em></template>
-          <b-dropdown-item @click="logout"">Logout</b-dropdown-item>
+          <b-dropdown-item @click="logout">Logout</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>
@@ -30,18 +27,22 @@
 </template>
 
 <script>
+  import Search from '~/components/search.vue'
   export default{
-        data(){
-            return{
-              userName:this.$store.state.userName
-            }
-        },
-        methods:{
-            logout(){
-                this.$router.push({path:'/'})
-                this.$store.commit('logout');
-            }
-        }
+      data(){
+          return{
+            userName:this.$store.state.userName
+          }
+      },
+      components:{
+        Search
+      },
+      methods:{
+          logout(){
+              this.$router.push({path:'/'})
+              this.$store.commit('logout');
+          }
+      }
   }
 
 </script>

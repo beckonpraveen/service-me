@@ -20,13 +20,46 @@ routes.get("/list", (req,res) =>{
         search.value = searchData[1];
     }
     if(req.query.sort){
+        console.log(JSON.stringify(req.query.sort));
         let sortData = req.query.sort.split(":");
         sort.sortBy = sortData[0];
         sort.sortOrder = sortData[1];
     }
-    ticketService.getAll(page, limit, search, sort, function(tickets){
+    ticketService.getAll(page, limit, search, sort, function(response){
+
+        let processedTickets = [];
+        response.docs.forEach(function(ticket){
+          var processedTicket = JSON.parse(JSON.stringify(ticket));
+          if(processedTicket.createdDate){
+            var dateString = new Date(processedTicket.createdDate).toString();
+            var tokens = dateString.split(" ");
+            dateString = tokens[1] + " "+ tokens[2] + " "+ tokens[3];
+            processedTicket["createdDate"] = dateString;
+            processedTickets.push(processedTicket);
+          }
+        });
+        response.docs = processedTickets;
         res.status(200);
-        res.send({"Status":"Success", "data":tickets});
+        res.send({"Status":"Success", "data":response});
+    })
+});
+
+/*
+Ideally should fetch chart by id, using name for simpplicity as the chart list is not coming
+from the database
+*/
+routes.get("/charts",(req,res) =>{
+    let chartName = req.query.name;
+    ticketService.getChartByName(chartName, function(chartData){
+        res.set(200);
+        res.send({"status":"Success", "data":chartData});
+    });
+});
+
+routes.get("/years",(req,res) => {
+    ticketService.getDistinctTicketYears(function(years){
+        res.set(200);
+        res.send({"status":"Success", "data":years});
     })
 });
 

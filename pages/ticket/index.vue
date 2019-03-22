@@ -1,5 +1,6 @@
 <template>
-    <div v-if="loggedIn">
+
+    <div v-if="loggedIn" class="bar-chart">
       <NavBar/>
       <Dashboard/>
     </div>
@@ -11,11 +12,17 @@
 <script>
   import Dashboard from '~/components/dashboard.vue'
   import NavBar from '~/components/nav-bar.vue'
+  import axios from 'axios'
   export default{
       data(){
           return {
             loggedIn:this.$store.state.loginStatus == 1?true:false
           }
+      },
+      methods:{
+        getRandomInt () {
+          return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+        }
       },
       components: {
         Dashboard,
