@@ -50,7 +50,8 @@ from the database
 */
 routes.get("/charts",(req,res) =>{
     let chartName = req.query.name;
-    ticketService.getChartByName(chartName, function(chartData){
+    let year = req.query.year;
+    ticketService.getChartByName(chartName, year, function(chartData){
         res.set(200);
         res.send({"status":"Success", "data":chartData});
     });
@@ -61,11 +62,6 @@ routes.get("/years",(req,res) => {
         res.set(200);
         res.send({"status":"Success", "data":years});
     })
-});
-
-//Autosuggestion for search
-routes.post("/search", (req,res) =>{
-
 });
 
 module.exports = routes;

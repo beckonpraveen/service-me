@@ -26,18 +26,33 @@ let ticketRepository = {
           console.log(err);
         });
   },
-  fetchSummaryData: function(groupBy, callback){
+  fetchSummaryData: function(groupBy, yearValue, callback){
 
       let aggregateField = "$"+groupBy;
-      ticket.aggregate([{"$group":{_id:aggregateField,count:{$sum:1}}}], function(err, summary){
-          console.log("Fetched summary is::"+JSON.stringify(summary));
+      let groupConfig = {"$group":{_id:aggregateField,count:{$sum:1}}};
+      let aggregate = [];
+      if(yearValue){
+        aggregate.push({$match :{year:parseInt(yearValue)}});
+      }
+      aggregate.push(groupConfig);
+      ticket.aggregate(aggregate, function(err, summary){
           callback(summary);
+      });
+  },
+  fetchCountData: function(fieldName, fieldValue, yearValue, callback){
+
+      var query = {};
+      query[fieldName] = fieldValue;
+      if(yearValue){
+        query['year'] = parseInt(yearValue);
+      }
+      ticket.countDocuments(query, function(err, countResult){
+          callback(countResult);
       });
   },
   fetchDistinctYears: function(callback){
 
       ticket.distinct("year", function(err, years){
-          console.log("Years data is::"+JSON.stringify(years));
           years.sort(function(a,b){return b-a});
           let top5years = years.slice(0,5);
           callback(top5years);

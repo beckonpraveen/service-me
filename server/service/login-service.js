@@ -1,5 +1,5 @@
 
-//Use System separator
+
 let userRepository = require('../repository/user-repository.js');
 
 let loginService = {
@@ -12,11 +12,11 @@ let loginService = {
                       callback({"status":"Success"})
                     }
                     else {
-                      callback({"status":"Failure", "message":"Password is incorrect"});
+                      callback({"status":"Failure", "data":"Password is incorrect"});
                     }
                   }
                   else{
-                    callback({"status":"No such user exists"});
+                    callback({"data":"No such user exists"});
                   }
             });
       }

@@ -3,15 +3,21 @@
     <div v-if="loggedIn" class="bar-chart">
       <NavBar/>
       <Dashboard/>
+      <Footer/>
     </div>
     <div v-else>
-      Oh no 😢
+      <p class="mb-6 text-center">Unauthorized! Please login!!</p>
     </div>
 </template>
-
+<style>
+body{
+  background: #fdfdfd;
+}
+</style>
 <script>
   import Dashboard from '~/components/dashboard.vue'
   import NavBar from '~/components/nav-bar.vue'
+  import Footer from '~/components/footer.vue'
   import axios from 'axios'
   export default{
       data(){
@@ -26,7 +32,8 @@
       },
       components: {
         Dashboard,
-        NavBar
+        NavBar,
+        Footer
       }
   }
 </script>

@@ -2,17 +2,34 @@
 let ticketRepository = require('../repository/ticket-repository.js');
 
 let ticketService = {
-      chartsList:['totalByType', 'totalByPriority'],
+      chartsList:['totalByType', 'totalByPriority','totalByCategory','totalBySatisfaction','totalByYear','totalOpen'],
       chartsConfig: {
         totalByType:{
-              title:'Total Tickets By Type',
               type:'pie',
               groupBy:'type'
         },
         totalByPriority:{
-              title:'Total Tickets By Priority',
               type:'bar',
               groupBy:'priority'
+        },
+        totalByCategory:{
+              type:'bar',
+              groupBy:'category'
+        },
+        totalBySatisfaction:{
+              type:'pie',
+              groupBy:'satisfaction'
+        },
+        totalByYear:{
+              type:'line',
+              groupBy:'year'
+        },
+        totalOpen:{
+              type:'text',
+              count:{
+                  "fieldName":"satisfaction",
+                  "fieldValue":"Unknown"
+              }
         }
       },
       getAll: function(page, limit, search, sort, callback){
@@ -25,14 +42,23 @@ let ticketService = {
 
             callback(this.chartsList);
       },
-      getChartByName: function(chartName, callback){
-            console.log("Get chart by name called for chart::"+chartName);
+      getChartByName: function(chartName, year, callback){
+
             let chartConfig = this.chartsConfig[chartName];
-            ticketRepository.fetchSummaryData(chartConfig.groupBy, function(chartData){
-              callback(chartData);
-            });
+            console.log("Chart config is::"+JSON.stringify(chartConfig));
+            if(chartConfig.groupBy){
+              ticketRepository.fetchSummaryData(chartConfig.groupBy, year, function(chartData){
+                callback(chartData);
+              });
+            }
+            else if(chartConfig.count){
+              ticketRepository.fetchCountData(chartConfig.count.fieldName,chartConfig.count.fieldValue, year, function(chartData){
+                callback(chartData);
+              });
+            }
       },
       getDistinctTicketYears: function(callback){
+
           ticketRepository.fetchDistinctYears(function(years){
             callback(years);
           });

@@ -1,22 +1,44 @@
+
 <template>
-  <div class="login">
-    <!--div v-if="loggingIn" class="container-loading">
-      <img src="/loading.gif" alt="Loading Icon">
-    </div-->
-    <!--p v-if="loginError">{{ loginError }}</p>
-    <p v-if="loginSuccessful">Login Successful</p-->
-    <form @submit.prevent="onLogin">
-      <input type="text" placeholder="User ID" v-model="userId">
-      <input type="password" placeholder="Password" v-model="password">
-      <button type="submit">Login</button>
-    </form>
-  </div>
+<div>
+  <b-container >
+    <b-row style="margin-top:20vh">
+      <b-col>
+        <div class="text-center">
+          <img src="https://www.npinnovations.com/wp-content/uploads/2016/05/North-Park-sm.png" width="20%"/>
+        </div>
+      </b-col>
+    </b-row>
+    <b-row class="mt-4">
+      <b-col sm="12" lg="6" offset-lg="3">
+        <b-card class="p-3">
+          <h4 class="mb-4">Login</h4>
+          <b-form @submit.prevent="onLogin">
+            <b-form-group>
+              <b-form-input @click="clearFormError" v-model="userId" type="text" placeholder="Username" required/>
+            </b-form-group>
+
+            <b-form-group>
+              <b-form-input @click="clearFormError" v-model="password" type="password" placeholder="Password" required/>
+            </b-form-group>
+            <div class="text-center">
+              <b-button type="submit" variant="primary" style="width:40%">Sign In</b-button>
+            </div>
+          </b-form>
+          <p class="login-error text-center">{{error}}</p>
+        </b-card>
+      </b-col>
+    </b-row>
+  </b-container>
+</div>
 </template>
 <script>
   import axios from 'axios'
   export default{
       data(){
         return {
+          isFormError:false,
+          error:'',
           userId:'',
           password:''
         }
@@ -31,65 +53,27 @@
             axios.post(`http://localhost:3000/login`,loginData)
             .then(response => {
               if(response.status == 200){
-                  this.$router.push({path:'ticket'})
+                  this.$router.push({path:'ticket'});
+                  this.$store.commit('login',this.userId);
               }
-              console.log("Logged in state is::"+this.$store.state.loginStatus);
-              this.$store.commit('login',this.userId);
-              console.log("Logged in state is::"+this.$store.state.loginStatus);
-              console.log("Response is::"+response.data+"::"+response.status);
             })
             .catch(e => {
-              console.log(e);
-              //this.errors.push(e)
+              if(e.response.status == 401){
+                  this.isFormError = true;
+                  this.error = e.response.data.data;
+              }
             })
+        },
+        clearFormError(){
+          this.isFormError = false;
+          this.error = '';
         }
       }
   }
 </script>
 <style scoped>
-  .login {
-    border: 1px solid black;
-    border-radius: 5px;
-    padding: 1.5rem;
-    width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
-    overflow: hidden;
-    .container-loading {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: rgba(0,0,0,.3);
-      img {
-        width: 2rem;
-        height: 2rem;
-      }
-    }
-    form {
-      display: flex;
-      flex-flow: column;
-      *:not(:last-child) {
-        margin-bottom: 1rem;
-      }
-      input {
-        padding: .5rem;
-      }
-      button {
-        padding: .5rem;
-        background-color: lightgray;
-        border: 1px solid gray;
-        border-radius: 3px;
-        cursor: pointer;
-        &:hover {
-          background-color: lightslategray;
-        }
-      }
-    }
+  .login-error{
+
+      background-color:'red'
   }
 </style>

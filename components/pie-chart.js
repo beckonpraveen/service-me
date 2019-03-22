@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export default {
   extends: Pie,
-  props: ['data', 'options'],
+  props: ['data', 'options','forYear'],
   data(){
     return {
       processedData:{
@@ -17,7 +17,7 @@ export default {
             {
               label: 'Ticket Count',
               data: [],
-              backgroundColor: ["#FF6384","#36A2EB"]
+              backgroundColor:this.options.color
             }
           ]
       }
@@ -25,6 +25,9 @@ export default {
   },
   mounted() {
     var url = `http://localhost:3000/tickets/charts?name=${this.options.chartName}`;
+    if(this.forYear!=null ){
+       url = url + `&year=${this.forYear}`;
+    }
     axios.get(url)
     .then(response => {
       let labels = [];

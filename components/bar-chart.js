@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export default {
   extends: Bar,
-  props: ['data', 'options'],
+  props: ['data', 'options','forYear'],
   data(){
       return {
           processedData : {
@@ -11,7 +11,7 @@ export default {
               datasets:[
                 {
                   label: 'Ticket Count',
-                  backgroundColor: '#f87979',
+                  backgroundColor: this.options.color,
                   pointBackgroundColor: 'white',
                   borderWidth: 1,
                   pointBorderColor: '#249EBF',
@@ -23,6 +23,9 @@ export default {
   },
   mounted() {
     var url = `http://localhost:3000/tickets/charts?name=${this.options.chartName}`;
+    if(this.forYear!=null){
+       url = url + `&year=${this.forYear}`;
+    }
     axios.get(url)
     .then(response => {
       let labels = [];
@@ -33,6 +36,7 @@ export default {
       });
       this.processedData.labels = labels;
       this.processedData.datasets[0].data = counts;
+      console.log("Selected year is::"+this.forYear);
       this.renderChart(this.processedData, this.options);
     })
     .catch(e => {

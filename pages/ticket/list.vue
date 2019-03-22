@@ -2,9 +2,10 @@
     <div v-if="loggedIn">
       <NavBar/>
       <TicketList/>
+      <Footer/>
     </div>
     <div v-else>
-      Oh no 😢
+      <p class="text-center">Unauthorized! Please login!!</p>
     </div>
 </template>
 
@@ -12,6 +13,7 @@
 <script>
 import TicketList from '~/components/ticket-table.vue'
 import NavBar from '~/components/nav-bar.vue'
+import Footer from '~/components/footer.vue'
 export default {
   data(){
     return {
@@ -20,7 +22,8 @@ export default {
   },
   components: {
     TicketList,
-    NavBar
+    NavBar,
+    Footer
   }
 }
 </script>
